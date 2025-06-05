@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import ThemeToggler from "./components/ThemeToggler";
 import TodoList from "./components/TodoList";
 import "./styles/custom.css";
 import type { Todo } from "./types/todo";
@@ -56,7 +57,8 @@ function App() {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">📝 My Todo List</h2>
+      <ThemeToggler />
+      <h2 className="text-center mb-4">Todo List</h2>
       <div className="input-group mb-3">
         <input
           type="text"
