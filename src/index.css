@@ -209,3 +209,8 @@ body.dark {
 .btn-cancel:hover {
   background-color: #4d5155;
 }
+
+.no-todos {
+  font-size: 1rem;
+  color: #b5b5b6;
+}

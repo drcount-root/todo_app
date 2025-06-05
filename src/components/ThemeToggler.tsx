@@ -1,14 +1,12 @@
 import { useTheme } from "../context/ThemeContext";
+import { Moon, Sun } from "lucide-react";
 
 const ThemeToggler = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
 
   return (
-    <button
-      className="theme-toggle border border-1 rounded"
-      onClick={toggleTheme}
-    >
-      {theme === "dark" ? "☀️" : "🌙"}
+    <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+      {isDark ? <Moon fill="yellow" /> : <Sun fill="yellow" />}
     </button>
   );
 };

@@ -19,10 +19,11 @@ export const TodoItem = ({
   const [editTitle, setEditTitle] = useState(todo.title);
 
   const handleSave = () => {
-    if (editTitle.trim()) {
-      onEdit(todo.id, editTitle.trim());
-      setIsEditing(false);
+    const trimmed = editTitle.trim();
+    if (trimmed && trimmed !== todo.title) {
+      onEdit(todo.id, trimmed);
     }
+    setIsEditing(false);
   };
 
   return (
@@ -63,6 +64,8 @@ export const TodoItem = ({
                 <button
                   className="btn btn-save btn-sm me-2"
                   onClick={handleSave}
+                  disabled={editTitle.trim() === ""}
+                  title={editTitle.trim() === "" ? "Todo cannot be empty" : ""}
                 >
                   Save
                 </button>
@@ -77,7 +80,10 @@ export const TodoItem = ({
               <>
                 <button
                   className="btn btn-edit btn-sm me-2"
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => {
+                    setEditTitle(todo.title);
+                    setIsEditing(true);
+                  }}
                 >
                   Edit
                 </button>
