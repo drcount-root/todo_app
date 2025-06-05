@@ -3,10 +3,13 @@ import { useEffect, useState } from "react";
 import { TodoList } from "./components/TodoList";
 import ThemeToggler from "./components/ThemeToggler";
 import type { Todo } from "./types/todo";
+import { debounce } from "./utils/debounceUtil";
 
 const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
     fetch("../data/data.json")
@@ -16,6 +19,21 @@ const App = () => {
         console.error("Failed to fetch data.json:", error);
       });
   }, []);
+
+  useEffect(() => {
+    setFilteredTodos(todos);
+  }, [todos]);
+
+  useEffect(() => {
+    const debouncedFilter = debounce((query: string) => {
+      const lowercased = query.toLowerCase();
+      setFilteredTodos(
+        todos.filter((todo) => todo.title.toLowerCase().includes(lowercased))
+      );
+    }, 300);
+
+    debouncedFilter(search);
+  }, [search, todos]);
 
   const addTodo = () => {
     if (!newTodo.trim()) return;
@@ -60,7 +78,18 @@ const App = () => {
   return (
     <div className="container position-relative">
       <ThemeToggler />
-      <h2 className="todo-title">Todo List</h2>
+      <h2 className="todo-title">Todo Manager</h2>
+
+      <div className="input-card d-flex align-items-center mt-3">
+        <input
+          type="text"
+          className="todo-input"
+          placeholder="Search todos..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
       <div className="input-card d-flex align-items-center">
         <input
           type="text"
@@ -73,9 +102,10 @@ const App = () => {
           Add
         </button>
       </div>
+
       <TodoList
         onEdit={handleEditTodo}
-        todos={todos}
+        todos={filteredTodos}
         onToggle={toggleComplete}
         onDelete={deleteTodo}
       />
