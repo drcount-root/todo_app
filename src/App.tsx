@@ -1,28 +1,35 @@
 import { useEffect, useState } from "react";
-
 import { TodoList } from "./components/TodoList";
 import ThemeToggler from "./components/ThemeToggler";
-import type { Todo } from "./types/todo";
 import { debounce } from "./utils/debounceUtil";
+import type { Todo } from "./types/todo";
+
+const initialTodos: Todo[] = [
+  {
+    id: 1,
+    title: "Buy groceries",
+    completed: true,
+    modified_at: "2025-05-05T00:00:00Z",
+  },
+  {
+    id: 2,
+    title: "Check email",
+    completed: true,
+    modified_at: "2025-05-05T16:15:00Z",
+  },
+  {
+    id: 3,
+    title: "Meeting",
+    completed: false,
+    modified_at: "2025-05-06T10:45:00Z",
+  },
+];
 
 const App = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(initialTodos);
   const [newTodo, setNewTodo] = useState<string>("");
   const [search, setSearch] = useState<string>("");
-  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
-
-  useEffect(() => {
-    fetch("/data/data.json")
-      .then((res) => res.json())
-      .then((data: Todo[]) => setTodos(data))
-      .catch((error) => {
-        console.error("Failed to fetch data.json:", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    setFilteredTodos(todos);
-  }, [todos]);
+  const [filteredTodos, setFilteredTodos] = useState<Todo[]>(initialTodos);
 
   useEffect(() => {
     const debouncedFilter = debounce((query: string) => {
@@ -31,7 +38,6 @@ const App = () => {
         todos.filter((todo) => todo.title.toLowerCase().includes(lowercased))
       );
     }, 300);
-
     debouncedFilter(search);
   }, [search, todos]);
 
@@ -98,17 +104,25 @@ const App = () => {
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
         />
-        <button className="btn btn-add ms-2" onClick={addTodo}>
+        <button
+          className="btn btn-add ms-2"
+          onClick={addTodo}
+          disabled={!newTodo.trim()}
+        >
           Add
         </button>
       </div>
 
-      <TodoList
-        onEdit={handleEditTodo}
-        todos={filteredTodos}
-        onToggle={toggleComplete}
-        onDelete={deleteTodo}
-      />
+      {filteredTodos.length === 0 ? (
+        <p className="no-todos text-center">No todos found</p>
+      ) : (
+        <TodoList
+          onEdit={handleEditTodo}
+          todos={filteredTodos}
+          onToggle={toggleComplete}
+          onDelete={deleteTodo}
+        />
+      )}
     </div>
   );
 };

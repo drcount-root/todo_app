@@ -92,6 +92,11 @@ body.dark {
   transition: background-color 0.3s ease;
 }
 
+.dark .btn-add {
+  background-color: #4285f4;
+  color: #fff;
+}
+
 .btn-add:hover {
   background-color: #3267d6;
 }
@@ -151,12 +156,12 @@ body.dark {
 }
 
 .text-muted {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #80868b;
 }
 
 .dark .text-muted {
-  color: #bdc1c6;
+  color: #ffffff !important;
 }
 
 .btn-sm {

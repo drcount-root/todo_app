@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { formatDate } from "../utils/formatDate";
+import { useEffect, useRef, useState } from "react";
 import type { Todo } from "../types/todo";
+import { formatDate } from "../utils/formatDate";
 
 interface TodoItemProps {
   todo: Todo;
@@ -17,6 +17,15 @@ export const TodoItem = ({
 }: TodoItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      const length = inputRef.current.value.length;
+      inputRef.current.setSelectionRange(length, length);
+    }
+  }, [isEditing]);
 
   const handleSave = () => {
     const trimmed = editTitle.trim();
@@ -32,10 +41,11 @@ export const TodoItem = ({
         <div className="d-flex flex-column">
           {isEditing ? (
             <input
+              ref={inputRef}
               type="text"
-              className="form-control todo-input mb-2"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
+              className="todo-input"
             />
           ) : (
             <div className="d-flex align-items-start mb-2">
@@ -48,9 +58,10 @@ export const TodoItem = ({
               />
               <div>
                 <div
-                  className={`todo-text ${todo.completed ? "completed" : ""}`}
-                >
-                  {todo.title}
+              className={`todo-text ${todo.completed ? "completed" : ""}`}
+              onClick={() => onToggle(todo.id)}
+            >
+              {todo.title}
                 </div>
                 <small className="text-muted">
                   Last updated: {formatDate(todo.modified_at)}
@@ -101,3 +112,4 @@ export const TodoItem = ({
     </div>
   );
 };
+
