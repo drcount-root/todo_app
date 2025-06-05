@@ -1,27 +1,44 @@
-import TodoItem from "./TodoItem";
-import type { Todo } from "../types/todo";
+import { TodoItem } from "./TodoItem";
 
-interface Props {
-  todos: Todo[];
-  onToggle: (id: number) => void;
-  onDelete: (id: number) => void;
-  onEdit: (id: number, newTitle: string) => void;
-}
 
-const TodoList: React.FC<Props> = ({ todos, onToggle, onDelete, onEdit }) => {
+export const TodoList = ({ todos, onToggle, onDelete, onEdit }) => {
+  const incompleteTodos = todos.filter((todo) => !todo.completed);
+  const completedTodos = todos.filter((todo) => todo.completed);
+
   return (
-    <ul className="list-group">
-      {todos.map(todo => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          onToggle={onToggle}
-          onDelete={onDelete}
-          onEdit={onEdit}
-        />
-      ))}
-    </ul>
+    <>
+      {incompleteTodos.length > 0 && (
+        <>
+          <h3 className="section-title">Tasks</h3>
+          <div className="row">
+            {incompleteTodos.map((todo) => (
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                onToggle={onToggle}
+                onDelete={onDelete}
+                onEdit={onEdit}
+              />
+            ))}
+          </div>
+        </>
+      )}
+      {completedTodos.length > 0 && (
+        <>
+          <h3 className="section-title mt-4">Completed</h3>
+          <div className="row">
+            {completedTodos.map((todo) => (
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                onToggle={onToggle}
+                onDelete={onDelete}
+                onEdit={onEdit}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </>
   );
 };
-
-export default TodoList;

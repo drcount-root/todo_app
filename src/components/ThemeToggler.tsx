@@ -1,13 +1,22 @@
-import React from "react";
+import { useState, useEffect } from "react";
 
-import { useTheme } from "../context/ThemeContext";
+const ThemeToggler = () => {
+  const [isDark, setIsDark] = useState(false);
 
-const ThemeToggler: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
+  useEffect(() => {
+    if (isDark) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [isDark]);
 
   return (
-    <button onClick={toggleTheme} className="btn btn-outline-secondary mb-3">
-      {theme === "light" ? "☀️" : "🌙"}
+    <button
+      className="theme-toggle border border-1 rounded"
+      onClick={() => setIsDark(!isDark)}
+    >
+      {isDark ? "☀️" : "🌙"}
     </button>
   );
 };

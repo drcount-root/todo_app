@@ -1,16 +1,7 @@
-import React, { useState } from "react";
-
-import type { Todo } from "../types/todo";
+import { useState } from "react";
 import { formatDate } from "../utils/formatDate";
 
-interface Props {
-  todo: Todo;
-  onToggle: (id: number) => void;
-  onDelete: (id: number) => void;
-  onEdit: (id: number, newTitle: string) => void;
-}
-
-const TodoItem: React.FC<Props> = ({ todo, onToggle, onDelete, onEdit }) => {
+export const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
 
@@ -22,68 +13,72 @@ const TodoItem: React.FC<Props> = ({ todo, onToggle, onDelete, onEdit }) => {
   };
 
   return (
-    <li className="list-group-item d-flex justify-content-between align-items-center">
-      <div className="flex-grow-1 me-3">
-        {isEditing ? (
-          <input
-            type="text"
-            className="form-control"
-            value={editTitle}
-            onChange={(e) => setEditTitle(e.target.value)}
-          />
-        ) : (
-          <>
+    <div className="col-md-4 col-sm-6 mb-3">
+      <div className="todo-card">
+        <div className="d-flex flex-column">
+          {isEditing ? (
             <input
-              type="checkbox"
-              className="form-check-input me-2"
-              checked={todo.completed}
-              onChange={() => onToggle(todo.id)}
-              disabled={isEditing}
+              type="text"
+              className="form-control todo-input mb-2"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
             />
-            <span
-              className={todo.completed ? "text-decoration-line-through" : ""}
-            >
-              {todo.title}
-            </span>
-            <small className="text-muted ms-2">
-              (Last updated: {formatDate(todo.modified_at)})
-            </small>
-          </>
-        )}
+          ) : (
+            <div className="d-flex align-items-start mb-2">
+              <input
+                type="checkbox"
+                className="form-check-input me-2"
+                checked={todo.completed}
+                onChange={() => onToggle(todo.id)}
+                disabled={isEditing}
+              />
+              <div>
+                <div
+                  className={`todo-text ${todo.completed ? "completed" : ""}`}
+                >
+                  {todo.title}
+                </div>
+                <small className="text-muted">
+                  Last updated: {formatDate(todo.modified_at)}
+                </small>
+              </div>
+            </div>
+          )}
+          <div className="d-flex justify-content-end">
+            {isEditing ? (
+              <>
+                <button
+                  className="btn btn-save btn-sm me-2"
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+                <button
+                  className="btn btn-cancel btn-sm"
+                  onClick={() => setIsEditing(false)}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className="btn btn-edit btn-sm me-2"
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-delete btn-sm"
+                  onClick={() => onDelete(todo.id)}
+                >
+                  Delete
+                </button>
+              </>
+            )}
+          </div>
+        </div>
       </div>
-
-      <div className="btn-group btn-group-sm">
-        {isEditing ? (
-          <>
-            <button className="btn btn-success" onClick={handleSave}>
-              Save
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => setIsEditing(false)}
-            >
-              Cancel
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              className="btn btn-warning"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit
-            </button>
-            <button
-              className="btn btn-danger"
-              onClick={() => onDelete(todo.id)}
-            >
-              Delete
-            </button>
-          </>
-        )}
-      </div>
-    </li>
+    </div>
   );
 };
-
-export default TodoItem;

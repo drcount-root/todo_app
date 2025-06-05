@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
 
+import { TodoList } from "./components/TodoList";
 import ThemeToggler from "./components/ThemeToggler";
-import TodoList from "./components/TodoList";
-import "./styles/custom.css";
-import type { Todo } from "./types/todo";
-
-function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+const App = () => {
+  const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
 
   useEffect(() => {
-    fetch("/data/data.json")
+    fetch("../data/data.json")
       .then((res) => res.json())
-      .then((data) => setTodos(data));
+      .then((data) => setTodos(data))
+      .catch((error) => {
+        console.error("Failed to fetch data.json:", error);
+      });
   }, []);
 
   const addTodo = () => {
     if (!newTodo.trim()) return;
-    const newEntry: Todo = {
+    const newEntry = {
       id: Date.now(),
       title: newTodo.trim(),
       completed: false,
@@ -27,7 +27,7 @@ function App() {
     setNewTodo("");
   };
 
-  const toggleComplete = (id: number) => {
+  const toggleComplete = (id) => {
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id
@@ -41,7 +41,7 @@ function App() {
     );
   };
 
-  const handleEditTodo = (id: number, newTitle: string) => {
+  const handleEditTodo = (id, newTitle) => {
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id
@@ -51,23 +51,23 @@ function App() {
     );
   };
 
-  const deleteTodo = (id: number) => {
+  const deleteTodo = (id) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container position-relative">
       <ThemeToggler />
-      <h2 className="text-center mb-4">Todo List</h2>
-      <div className="input-group mb-3">
+      <h2 className="todo-title">Todo List</h2>
+      <div className="input-card d-flex align-items-center">
         <input
           type="text"
-          className="form-control"
-          placeholder="Add a todo..."
+          className="todo-input"
+          placeholder="Add a task..."
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
         />
-        <button className="btn btn-primary" onClick={addTodo}>
+        <button className="btn btn-add ms-2" onClick={addTodo}>
           Add
         </button>
       </div>
@@ -79,6 +79,6 @@ function App() {
       />
     </div>
   );
-}
+};
 
 export default App;
