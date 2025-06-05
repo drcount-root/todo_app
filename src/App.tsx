@@ -12,7 +12,7 @@ const App = () => {
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
-    fetch("../data/data.json")
+    fetch("/data/data.json")
       .then((res) => res.json())
       .then((data: Todo[]) => setTodos(data))
       .catch((error) => {
