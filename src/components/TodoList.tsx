@@ -1,7 +1,19 @@
+import type { Todo } from "../types/todo";
 import { TodoItem } from "./TodoItem";
 
+interface TodoListProps {
+  todos: Todo[];
+  onToggle: (id: number) => void;
+  onDelete: (id: number) => void;
+  onEdit: (id: number, newTitle: string) => void;
+}
 
-export const TodoList = ({ todos, onToggle, onDelete, onEdit }) => {
+export const TodoList = ({
+  todos,
+  onToggle,
+  onDelete,
+  onEdit,
+}: TodoListProps) => {
   const incompleteTodos = todos.filter((todo) => !todo.completed);
   const completedTodos = todos.filter((todo) => todo.completed);
 

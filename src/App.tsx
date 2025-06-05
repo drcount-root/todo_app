@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 
 import { TodoList } from "./components/TodoList";
 import ThemeToggler from "./components/ThemeToggler";
+import type { Todo } from "./types/todo";
+
 const App = () => {
-  const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState("");
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodo, setNewTodo] = useState<string>("");
 
   useEffect(() => {
     fetch("../data/data.json")
       .then((res) => res.json())
-      .then((data) => setTodos(data))
+      .then((data: Todo[]) => setTodos(data))
       .catch((error) => {
         console.error("Failed to fetch data.json:", error);
       });
@@ -17,7 +19,7 @@ const App = () => {
 
   const addTodo = () => {
     if (!newTodo.trim()) return;
-    const newEntry = {
+    const newEntry: Todo = {
       id: Date.now(),
       title: newTodo.trim(),
       completed: false,
@@ -27,7 +29,7 @@ const App = () => {
     setNewTodo("");
   };
 
-  const toggleComplete = (id) => {
+  const toggleComplete = (id: number) => {
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id
@@ -41,7 +43,7 @@ const App = () => {
     );
   };
 
-  const handleEditTodo = (id, newTitle) => {
+  const handleEditTodo = (id: number, newTitle: string) => {
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id
@@ -51,7 +53,7 @@ const App = () => {
     );
   };
 
-  const deleteTodo = (id) => {
+  const deleteTodo = (id: number) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 

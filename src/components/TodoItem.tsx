@@ -1,7 +1,20 @@
 import { useState } from "react";
 import { formatDate } from "../utils/formatDate";
+import type { Todo } from "../types/todo";
 
-export const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
+interface TodoItemProps {
+  todo: Todo;
+  onToggle: (id: number) => void;
+  onDelete: (id: number) => void;
+  onEdit: (id: number, newTitle: string) => void;
+}
+
+export const TodoItem = ({
+  todo,
+  onToggle,
+  onDelete,
+  onEdit,
+}: TodoItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
 
